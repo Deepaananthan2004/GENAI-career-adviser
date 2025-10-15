@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import fitz  # PyMuPDF
 import spacy
+import spacy.cli
 from dotenv import load_dotenv
 from groq import Groq
 
@@ -9,11 +10,11 @@ from groq import Groq
 load_dotenv()
 
 # Download model if not present
-spacy.cli.download("en_core_web_sm")
-
-# Load spaCy model
-nlp = spacy.load("en_core_web_sm")
-
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    spacy.cli.download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
 # Initialize Grok client
 GROK_API_KEY = os.getenv("GROQ_API_KEY")
 if not GROK_API_KEY:
@@ -61,3 +62,4 @@ if uploaded_pdf is not None:
     st.write("Extracted Skills:", skills)
 
     st.write("Extracted Experience:", experience)
+
