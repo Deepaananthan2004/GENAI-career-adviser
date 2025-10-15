@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gen AI Career Adviser for College Students</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+  :root {
+    --primary-color: #0066ff;
+    --secondary-color: #33cc99;
+    --bg-color: #f9fbfd;
+    --card-bg: #fff;
+    --text-color: #222;
+    --shadow: rgba(0,0,0,0.12);
+  }
+  body {
+    margin:0; padding:0; font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-color);
+    display: flex; justify-content: center; min-height: 100vh; align-items: center;
+  }
+  .container {
+    background: var(--card-bg);
+    max-width: 900px;
+    width: 94%;
+    padding: 2.5rem 3rem;
+    border-radius: 15px;
+    box-shadow: 0 12px 34px var(--shadow);
+    box-sizing: border-box;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 1.8rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 2.2rem;
+  }
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  input[type=text], select, textarea {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1.6px solid #ccc;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  input[type=text]:focus, select:focus, textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+  }
+  button {
+    margin-top: 1rem;
+    background: var(--primary-color);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    padding: 0.9rem 1.6rem;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.35s ease;
+  }
+  button:hover {
+    background: var(--secondary-color);
+    color: #004d40;
+  }
+  .section {
+    margin-top: 2.4rem;
+  }
+  .section h2 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+  .output, .reminder {
+    margin-top: 1rem;
+    background: #e4f2f7;
+    border-left: 6px solid var(--secondary-color);
+    padding: 1.1rem 1.4rem;
+    border-radius: 9px;
+    font-size: 1.1rem;
+    color: #104b44;
+    min-height: 3rem;
+  }
+  .skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+  .skill-chip {
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    user-select: none;
+    transition: background 0.3s ease;
+    cursor: pointer;
+  }
+  .skill-chip.selected {
+    background: var(--secondary-color);
+    color: #004d40;
+  }
+  ul.task-list {
+    margin: 0;
+    padding-left: 1.4rem;
+    list-style: disc inside;
+  }
+  footer {
+    text-align: center;
+    font-size: 0.88rem;
+    margin-top: 3rem;
+    color: #777;
+    font-style: italic;
+  }
+  @media (max-width: 600px) {
+    .container {
+      padding: 1.5rem 1.3rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="container">
+    <h1>Career Adviser AI - College Students</h1>
+
+    <section class="section">
+      <label for="linkedinUrl">LinkedIn Profile URL</label>
+      <input type="text" id="linkedinUrl" placeholder="Enter your LinkedIn profile link" />
+      <small style="color:#555;">* We'll simulate fetching your LinkedIn activities.</small>
+      <button id="fetchLinkedinBtn">Fetch LinkedIn Activities</button>
+      <div id="linkedinActivitiesOutput" class="output" style="display:none;"></div>
+    </section>
+
+    <section class="section">
+      <label>Select Your Learning Skills</label>
+      <div id="skillsContainer" class="skills-container"></div>
+      <button id="updateSkillsBtn">Update Skills</button>
+    </section>
+
+    <section class="section">
+      <h2>Your Weekly Task</h2>
+      <div id="weeklyTaskOutput" class="output">No tasks generated yet.</div>
+    </section>
+
+    <section class="section">
+      <h2>Weekly Resume Update Reminder</h2>
+      <div id="resumeUpdateReminder" class="reminder">No reminders currently.</div>
+    </section>
+  </main>
+
+  <footer>© 2024 College Career Adviser AI</footer>
+
+<script>
+(() => {
+  const skillsList = [
+    "JavaScript", "Python", "Data Analysis", "Machine Learning",
+    "Web Development", "Cloud Computing", "DevOps", "UI/UX Design",
+    "Soft Skills", "Communication", "Project Management", "Cybersecurity", "Databases"
+  ];
+
+  const simulatedActivities = [
+    "Participated in AI research project.",
+    "Completed a course on React.js.",
+    "Joined Cloud Computing interest group.",
+    "Wrote article on Data Analysis.",
+    "Collaborated on open-source project.",
+    "Attended Cybersecurity webinar."
+  ];
+
+  const linkedinInput = document.getElementById('linkedinUrl');
+  const fetchLinkedInBtn = document.getElementById('fetchLinkedinBtn');
+  const linkedinActivitiesOutput = document.getElementById('linkedinActivitiesOutput');
+  const skillsContainer = document.getElementById('skillsContainer');
+  const updateSkillsBtn = document.getElementById('updateSkillsBtn');
+  const weeklyTaskOutput = document.getElementById('weeklyTaskOutput');
+  const resumeUpdateReminder = document.getElementById('resumeUpdateReminder');
+
+  function load(key, def) {
+    try {
+      return JSON.parse(localStorage.getItem(key)) || def;
+    } catch { return def; }
+  }
+
+  function save(key, val) {
+    localStorage.setItem(key, JSON.stringify(val));
+  }
+
+  function renderSkills(selected = []) {
+    skillsContainer.innerHTML = '';
+    skillsList.forEach(skill => {
+      const chip = document.createElement('div');
+      chip.className = 'skill-chip';
+      chip.textContent = skill;
+      if (selected.includes(skill)) chip.classList.add('selected');
+      chip.addEventListener('click', () => toggleSkill(chip, skill));
+      skillsContainer.appendChild(chip);
+    });
+  }
+
+  function toggleSkill(chip, skill) {
+    const selected = load('selectedSkills', []);
+    if (selected.includes(skill)) {
+      selected.splice(selected.indexOf(skill), 1);
+      chip.classList.remove('selected');
+    } else {
+      selected.push(skill);
+      chip.classList.add('selected');
+    }
+    save('selectedSkills', selected);
+  }
+
+  fetchLinkedInBtn.addEventListener('click', () => {
+    const url = linkedinInput.value.trim();
+    if (!url || !url.includes("linkedin.com")) {
+      linkedinActivitiesOutput.style.display = "block";
+      linkedinActivitiesOutput.innerHTML = "❌ Please enter a valid LinkedIn profile URL.";
+      return;
+    }
+    const randomActivities = simulatedActivities.sort(() => 0.5 - Math.random()).slice(0, 3);
+    linkedinActivitiesOutput.style.display = "block";
+    linkedinActivitiesOutput.innerHTML = `<strong>Recent Activities:</strong><br>• ${randomActivities.join('<br>• ')}`;
+    save('linkedinActivities', randomActivities);
+  });
+
+  updateSkillsBtn.addEventListener('click', () => {
+    const selectedSkills = load('selectedSkills', []);
+    const activities = load('linkedinActivities', []);
+    if (selectedSkills.length === 0 || activities.length === 0) {
+      weeklyTaskOutput.innerHTML = "❌ Please select skills and provide LinkedIn activities first.";
+      return;
+    }
+
+    let tasks = selectedSkills.map(skill => {
+      return `Work on a mini project or write an article related to "${skill}".`;
+    });
+    tasks = tasks.slice(0, 5);
+    weeklyTaskOutput.innerHTML = `<ul class="task-list">${tasks.map(t => `<li>${t}</li>`).join('')}</ul>`;
+    resumeUpdateReminder.innerHTML = `✅ Reminder: Add your recent LinkedIn activities and weekly tasks to your resume every Sunday.`;
+  });
+
+  renderSkills(load('selectedSkills', []));
+})();
+</script>
+</body>
+</html>

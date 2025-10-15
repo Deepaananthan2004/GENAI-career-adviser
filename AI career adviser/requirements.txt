@@ -1,0 +1,6 @@
+streamlit
+groq
+firebase-admin
+fitz
+spacy
+python-dotenv

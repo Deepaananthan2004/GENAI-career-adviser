@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Career Adviser</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🎓 AI Career Adviser Bot</h1>
+
+    <div class="chat-container">
+      <textarea id="prompt" placeholder="Type your question about your AI/ML/Data Science career..."></textarea>
+      <button onclick="ask()">Ask Adviser</button>
+    </div>
+
+    <div class="response-box">
+      <h3>💬 Response:</h3>
+      <div id="response"></div>
+    </div>
+
+    <hr>
+
+    <div class="upload-section">
+      <h3>📄 Upload Resume</h3>
+      <form id="resumeForm" enctype="multipart/form-data">
+        <input type="file" name="resume" id="resume" accept=".pdf,.docx" />
+        <button type="submit">Upload</button>
+      </form>
+      <p id="uploadStatus"></p>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
