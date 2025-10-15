@@ -1,8 +1,10 @@
-streamlit
-rich
-groq
-opencv-python
-mediapipe
+flask
+firebase-admin
+pymupdf
 spacy
+streamlit
+groq
+rich
+mediapipe
 python-dotenv
-fitz
+opencv-python
