@@ -1,0 +1,10 @@
+flask
+firebase-admin
+pymupdf
+spacy
+streamlit
+groq
+rich
+mediapipe
+python-dotenv
+opencv-python
