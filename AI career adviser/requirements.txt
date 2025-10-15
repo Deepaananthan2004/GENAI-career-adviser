@@ -1,7 +1,8 @@
 streamlit
+rich
 groq
-firebase-admin
-fitz
+opencv-python
+mediapipe
 spacy
-os
 python-dotenv
+fitz
