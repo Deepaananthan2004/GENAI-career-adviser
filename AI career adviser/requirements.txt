@@ -3,4 +3,5 @@ groq
 firebase-admin
 fitz
 spacy
+os
 python-dotenv
