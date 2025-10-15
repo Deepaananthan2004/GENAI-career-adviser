@@ -8,6 +8,9 @@ from groq import Groq
 # Load environment variables
 load_dotenv()
 
+# Download model if not present
+spacy.cli.download("en_core_web_sm")
+
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm")
 
@@ -56,4 +59,5 @@ uploaded_pdf = st.file_uploader("Upload your resume (PDF):", type=["pdf"])
 if uploaded_pdf is not None:
     skills, experience = extract_pdf_skills_experience(uploaded_pdf)
     st.write("Extracted Skills:", skills)
+
     st.write("Extracted Experience:", experience)
